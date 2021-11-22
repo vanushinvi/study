@@ -30,10 +30,17 @@ module Exercise
         my_reduce(self.class.new, &new_collection)
       end
 
+      def block_for_my_reduce(collection, acc, block)
+        return acc if collection.empty?
+
+        first, *rest = collection
+        acc = acc.nil? ? first : block.call(acc, first)
+        block_for_my_reduce(rest, acc, block)
+      end
+
       # Написать свою функцию my_reduce
-      def my_reduce(acc = nil)
-        my_each { |element| acc = acc.nil? ? element : acc = yield(acc, element) }
-        acc
+      def my_reduce(acc = nil, &block)
+        block_for_my_reduce(self, acc, block)
       end
     end
   end
